@@ -1,6 +1,6 @@
 {
   "database": {
-    "engine": "mysql",
+    "engine": "sqlite",
     "host": "db",
     "name": "npm",
     "user": "npm",

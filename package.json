@@ -59,6 +59,7 @@
     "path": "^0.12.7",
     "restler": "^3.4.0",
     "signale": "^1.2.1",
+    "sqlite3": "^4.1.1",
     "temp-write": "^3.4.0",
     "unix-timestamp": "^0.2.0"
   },

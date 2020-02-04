@@ -20,22 +20,23 @@ exports.up = function (knex/*, Promise*/) {
             table.string('value', 255).notNull();
             table.json('meta').notNull();
         })
-        .then(() => {
-            logger.info('[' + migrate_name + '] setting Table created');
+        // TODO: NOT SUPPORTED ON SQLITE
+        // .then(() => {
+        //     logger.info('[' + migrate_name + '] setting Table created');
 
-            // TODO: add settings
-            let settingModel = require('../models/setting');
+        //     // TODO: add settings
+        //     let settingModel = require('../models/setting');
 
-            return settingModel
-                .query()
-                .insert({
-                    id:          'default-site',
-                    name:        'Default Site',
-                    description: 'What to show when Nginx is hit with an unknown Host',
-                    value:       'congratulations',
-                    meta:        {}
-                });
-        })
+        //     return settingModel
+        //         .query()
+        //         .insert({
+        //             id:          'default-site',
+        //             name:        'Default Site',
+        //             description: 'What to show when Nginx is hit with an unknown Host',
+        //             value:       'congratulations',
+        //             meta:        {}
+        //         });
+        // })
         .then(() => {
             logger.info('[' + migrate_name + '] Default settings added');
         });

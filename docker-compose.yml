@@ -1,33 +1,33 @@
-# WARNING: This is a DEVELOPMENT docker-compose file, it should not be used for production.
-version: "2"
+version: "3.7"
 services:
-  app:
-    image: jc21/nginx-proxy-manager-base:latest
+  nginx:
+    image: ramosisw/nginx-proxy-manager:latest
+    container_name: nginx
+    hostname: nginx
+    build:
+      context: .
+    restart: always
+    networks: 
+      # dns:
+      nginx:
+        ipv4_address: 192.168.80.2
     ports:
       - 80:80
-      - 81:81
-      - 43:443
-    environment:
-      - NODE_ENV=development
-      - FORCE_COLOR=1
+      # - 81:81
+      - 443:443
     volumes:
-      - ./data:/data
+      - ./data/config.json:/app/config/production.json
+      - ./data/data:/data
+      - ./data/db:/db
       - ./data/letsencrypt:/etc/letsencrypt
-      - .:/app
-      - ./rootfs/etc/nginx:/etc/nginx
-    working_dir: /app
-    depends_on:
-      - db
-    links:
-      - db
-    command: node --max_old_space_size=250 --abort_on_uncaught_exception node_modules/nodemon/bin/nodemon.js
-  db:
-    image: jc21/mariadb-aria
     environment:
-      MYSQL_ROOT_PASSWORD: "npm"
-      MYSQL_DATABASE: "npm"
-      MYSQL_USER: "npm"
-      MYSQL_PASSWORD: "npm"
-    volumes:
-      - ./config/my.cnf:/etc/mysql/conf.d/npm.cnf
-      - ./data/mysql:/var/lib/mysql
+      - FORCE_COLOR=1
+networks:
+  # dns:
+  #   external: true
+  nginx:
+    name: nginx
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.80.0/28

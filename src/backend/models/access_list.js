@@ -6,12 +6,12 @@ const Model          = require('objection').Model;
 const User           = require('./user');
 const AccessListAuth = require('./access_list_auth');
 
-Model.knex(db);
+Model.knex(db.knex);
 
 class AccessList extends Model {
     $beforeInsert () {
-        this.created_on  = Model.raw('NOW()');
-        this.modified_on = Model.raw('NOW()');
+        this.created_on  = Model.raw(db.nowRaw());
+        this.modified_on = Model.raw(db.nowRaw());
 
         // Default for meta
         if (typeof this.meta === 'undefined') {
@@ -20,7 +20,7 @@ class AccessList extends Model {
     }
 
     $beforeUpdate () {
-        this.modified_on = Model.raw('NOW()');
+        this.modified_on = Model.raw(db.nowRaw());
     }
 
     static get name () {

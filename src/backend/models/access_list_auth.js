@@ -1,15 +1,16 @@
 // Objection Docs:
 // http://vincit.github.io/objection.js/
 
-const db    = require('../db');
+const db = require('../db');
 const Model = require('objection').Model;
 
-Model.knex(db);
+Model.knex(db.knex);
 
 class AccessListAuth extends Model {
-    $beforeInsert () {
-        this.created_on  = Model.raw('NOW()');
-        this.modified_on = Model.raw('NOW()');
+    $beforeInsert() {
+
+        this.created_on = Model.raw(db.nowRaw());
+        this.modified_on = Model.raw(db.nowRaw());
 
         // Default for meta
         if (typeof this.meta === 'undefined') {
@@ -17,32 +18,32 @@ class AccessListAuth extends Model {
         }
     }
 
-    $beforeUpdate () {
-        this.modified_on = Model.raw('NOW()');
+    $beforeUpdate() {
+        this.modified_on = Model.raw(db.nowRaw());
     }
 
-    static get name () {
+    static get name() {
         return 'AccessListAuth';
     }
 
-    static get tableName () {
+    static get tableName() {
         return 'access_list_auth';
     }
 
-    static get jsonAttributes () {
+    static get jsonAttributes() {
         return ['meta'];
     }
 
-    static get relationMappings () {
+    static get relationMappings() {
         return {
             access_list: {
-                relation:   Model.HasOneRelation,
+                relation: Model.HasOneRelation,
                 modelClass: require('./access_list'),
-                join:       {
+                join: {
                     from: 'access_list_auth.access_list_id',
-                    to:   'access_list.id'
+                    to: 'access_list.id'
                 },
-                modify:     function (qb) {
+                modify: function (qb) {
                     qb.where('access_list.is_deleted', 0);
                     qb.omit(['created_on', 'modified_on', 'is_deleted', 'access_list_id']);
                 }

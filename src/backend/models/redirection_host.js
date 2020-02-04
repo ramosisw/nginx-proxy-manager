@@ -6,12 +6,12 @@ const Model       = require('objection').Model;
 const User        = require('./user');
 const Certificate = require('./certificate');
 
-Model.knex(db);
+Model.knex(db.knex);
 
 class RedirectionHost extends Model {
     $beforeInsert () {
-        this.created_on  = Model.raw('NOW()');
-        this.modified_on = Model.raw('NOW()');
+        this.created_on  = Model.raw(db.nowRaw());
+        this.modified_on = Model.raw(db.nowRaw());
 
         // Default for domain_names
         if (typeof this.domain_names === 'undefined') {
@@ -27,7 +27,7 @@ class RedirectionHost extends Model {
     }
 
     $beforeUpdate () {
-        this.modified_on = Model.raw('NOW()');
+        this.modified_on = Model.raw(db.nowRaw());
 
         // Sort domain_names
         if (typeof this.domain_names !== 'undefined') {

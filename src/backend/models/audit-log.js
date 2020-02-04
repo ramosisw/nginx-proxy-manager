@@ -5,12 +5,12 @@ const db    = require('../db');
 const Model = require('objection').Model;
 const User  = require('./user');
 
-Model.knex(db);
+Model.knex(db.knex);
 
 class AuditLog extends Model {
     $beforeInsert () {
-        this.created_on  = Model.raw('NOW()');
-        this.modified_on = Model.raw('NOW()');
+        this.created_on  = Model.raw(db.nowRaw());
+        this.modified_on = Model.raw(db.nowRaw());
 
         // Default for meta
         if (typeof this.meta === 'undefined') {
@@ -19,7 +19,7 @@ class AuditLog extends Model {
     }
 
     $beforeUpdate () {
-        this.modified_on = Model.raw('NOW()');
+        this.modified_on = Model.raw(db.nowRaw());
     }
 
     static get name () {

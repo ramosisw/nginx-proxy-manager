@@ -4,7 +4,7 @@
 const db    = require('../db');
 const Model = require('objection').Model;
 
-Model.knex(db);
+Model.knex(db.knex);
 
 class Setting extends Model {
     $beforeInsert () {
